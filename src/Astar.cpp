@@ -8,8 +8,6 @@ void add(const cv::Mat &cos,float* potential,float prev_potential,int next_x,int
 bool Astar(const cv::Mat &, const pose &, const pose &,int,float*);
 int main(){
     depth = cv::imread( "./data/a.pgm",0);
-    char *map_;
-    map_ = new char[depth.rows*depth.cols + 1];
     //cout<<depth.rows<<"  111  "<<depth.cols;
 
     cv::Mat_<uchar>::iterator it;
@@ -28,7 +26,7 @@ int main(){
     pose start_pose{66,120};
     pose end_pose{178,101};
     float *potential;
-    potential = new float[400000];
+    potential = new float[depth.rows*depth.cols];
     if(Astar(depth,start_pose,end_pose,400000,potential) == true){
         if(getPath(start_pose,end_pose,depth,potential)==true)
             cout<<"OK"<<endl;
