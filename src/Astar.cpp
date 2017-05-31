@@ -6,28 +6,45 @@ vector<queue> queue_;
 void add(const cv::Mat &cos,float* potential,float prev_potential,int next_x,int next_y, int end_x,
          int end_y);
 bool Astar(const cv::Mat &, const pose &, const pose &,int,float*);
+pose start_pose{66,120};
+pose end_pose{178,101};
 int main(){
     depth = cv::imread( "./data/a.pgm",0);
     //cout<<depth.rows<<"  111  "<<depth.cols;
 
-    cv::Mat_<uchar>::iterator it;
-    cv::MatConstIterator_<uchar> it_in=depth.begin<uchar>();
-    cv::MatConstIterator_<uchar> itend_in=depth.end<uchar>();
-    while(it_in != itend_in)
+    //cv::Mat_<uchar>::iterator it;
+    //cv::MatConstIterator_<uchar> it_in=depth.begin<uchar>();
+    //cv::MatConstIterator_<uchar> itend_in=depth.end<uchar>();
+//    while(it_in != itend_in)
+//    {
+//        if(*it_in.ptr > 100){
+//            *it_in.ptr = (char)254;
+
+//        }
+//        else
+//            *it_in.ptr = (char)0;
+//        it_in++;
+//    }
+    for(int k=0;k<depth.rows;k++)
     {
-        if(*it_in.ptr > 100){
-            *it_in.ptr = 254;
+        // 每一行图像的指针
+        uchar* inData=depth.ptr<uchar>(k);
+        for(int i=0;i<depth.cols;i++)
+        {
+            if(inData[i]>100){
+                inData[i] = 254;
+            }else{
+                inData[i] = 0;
+            }
 
         }
-        else
-            *it_in.ptr = 0;
-        it_in++;
     }
-    pose start_pose{66,120};
-    pose end_pose{178,101};
+
+    cout<<1111<<endl;
     float *potential;
     potential = new float[depth.rows*depth.cols];
-    if(Astar(depth,start_pose,end_pose,400000,potential) == true){
+    int Mmax = depth.rows*depth.cols;
+    if(Astar(depth,start_pose,end_pose,Mmax,potential) == true){
         if(getPath(start_pose,end_pose,depth,potential)==true)
             cout<<"OK"<<endl;
     }
